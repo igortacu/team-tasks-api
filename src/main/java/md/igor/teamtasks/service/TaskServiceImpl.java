@@ -21,9 +21,10 @@ public class TaskServiceImpl implements TaskService {
         Long id = idSeq.getAndIncrement();
         Instant now = Instant.now();
         Task task = new Task();
-        task.getId();
+        task.setId(id);
+        task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
-        task.setPriority(request.getPriority() == null ? null : request.getPriority());
+        task.setPriority(request.getPriority());
         task.setDeadline(request.getDeadline());
         task.setCreatedAt(now);
         task.setUpdatedAt(now);
@@ -36,36 +37,35 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskResponse> getTasks() {
         List<TaskResponse> responses = new ArrayList<>();
-        for (Task task : tasks.values()) {responses.add(toResponse(task))}
+        for (Task task : tasks.values()) {responses.add(toResponse(task));}
         return responses;
     }
 
     @Override
-    public TaskResponse getTask(int id) {
+    public TaskResponse getTask(Long id) {
         Task task = tasks.get(id);
         if (task == null) throw new NoSuchElementException("No task with id " + id);
         return toResponse(task);
     }
 
     @Override
-    public TaskResponse update(Long id, UpdateTaskRequest taskRequest){
+    public TaskResponse updateTask(Long id, UpdateTaskRequest taskRequest){
         Task task = tasks.get(id);
         if (task == null) throw new NoSuchElementException("No task with id " + id);
 
-        if(task.getDescription() != null) task.setDescription(task.getDescription());
-        if(task.getPriority() != null) task.setPriority(task.getPriority());
-        if(task.getDeadline() != null) task.setDeadline(task.getDeadline());
-        if(task.getCreatedAt() != null) task.setCreatedAt(task.getCreatedAt());
-        if(task.getUpdatedAt() != null) task.setUpdatedAt(task.getUpdatedAt());
-        if(task.getStatus() != null) task.setStatus(task.getStatus());
-        tasks.setUpdatedAt(Instant.now());
+        if(taskRequest.getDescription() != null) task.setDescription(taskRequest.getDescription());
+        if(taskRequest.getPriority() != null) task.setPriority(taskRequest.getPriority());
+        if(taskRequest.getDeadline() != null) task.setDeadline(taskRequest.getDeadline());
+        // keep createdAt as is
+        task.setUpdatedAt(Instant.now());
 
-        return toResponse(tasks);
+        tasks.put(id, task);
+        return toResponse(task);
 
     }
 
     @Override
-    public void delete(Long id) {
+    public void deleteTask(Long id) {
         if (tasks.remove(id) == null) throw new NoSuchElementException("Task not found");
     }
 
@@ -74,8 +74,8 @@ public class TaskServiceImpl implements TaskService {
                 t.getId(),
                 t.getTitle(),
                 t.getDescription(),
-                t.getStatus(),
                 t.getPriority(),
+                t.getStatus(),
                 t.getDeadline(),
                 t.getCreatedAt(),
                 t.getUpdatedAt()
