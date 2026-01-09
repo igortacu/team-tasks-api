@@ -6,8 +6,8 @@ A lightweight task management REST API built with Spring Boot and Java 17. This 
 
 - **Complete CRUD Operations**: Create, read, update, and delete tasks
 - **Smart Filtering**: Filter tasks by status, priority, or search by keywords
-- **Priority Management**: Organize tasks with LOW, MEDIUM, and HIGH priority levels
-- **Status Tracking**: Track task progress through TODO, IN_PROGRESS, and DONE states
+- **Priority Management**: Organize tasks with Low, Medium, and High priority levels
+- **Status Tracking**: Track task progress through Todo, Doing, and Done states
 - **Deadline Management**: Set and track task deadlines
 - **Automatic Timestamps**: Automatic creation and update timestamp tracking
 - **Request Validation**: Built-in validation for all API requests
